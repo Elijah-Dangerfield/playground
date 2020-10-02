@@ -1,0 +1,23 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+
+    <!---TEXT STYLES -->
+    <style name="carouselHeaderText" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">28sp</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:layout_marginTop">@dimen/header_margin_top</item>
+        <item name="android:layout_marginBottom">@dimen/header_margin_bottom</item>
+        <item name="android:layout_marginStart">@dimen/header_margin_start</item>
+        <item name="android:layout_marginEnd">@dimen/header_margin_end</item>
+    </style>
+
+</resources>
