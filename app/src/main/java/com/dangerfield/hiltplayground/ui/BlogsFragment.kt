@@ -1,61 +1,57 @@
 package com.dangerfield.hiltplayground.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.hiltplayground.R
 import com.dangerfield.hiltplayground.models.Blog
-import com.dangerfield.hiltplayground.util.goneUnless
+import com.dangerfield.hiltplayground.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.WithFragmentBindings
 import kotlinx.android.synthetic.main.activity_main.*
-import com.dangerfield.hiltplayground.util.Resource.*
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Section
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.android.synthetic.main.fragment_blogs.*
 
-//marks this as a client of hilt
+@WithFragmentBindings
 @AndroidEntryPoint
-@ExperimentalCoroutinesApi
-class BlogsActivity : AppCompatActivity(), BlogClickHandler, UserClickHandler {
+class BlogsFragment : Fragment(R.layout.fragment_blogs), BlogClickHandler, UserClickHandler {
 
     private val viewModel: BlogsViewModel by viewModels()
 
     private val blogsAdapter = CarouselAdapter.Vertical("Blogs", BlogsAdapter(this))
     private val usersAdapter = CarouselAdapter.Horizontal("Users", UsersAdapter(this))
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         fetchInitialData()
         setupObservers()
         setupView()
     }
 
     private fun setupView() {
-        blogsRecyclerView.layoutManager = LinearLayoutManager(this)
+        blogsRecyclerView.layoutManager = LinearLayoutManager(context)
         blogsRecyclerView.adapter = ConcatAdapter(usersAdapter, blogsAdapter)
     }
 
     private fun setupObservers() {
-        viewModel.blogs.observe(this, {
+        viewModel.blogs.observe(this) {
             when (it) {
-                is Success -> showBlogsData(it.data)
-                is Error -> handleBlogsFetchError(it)
+                is Resource.Success -> showBlogsData(it.data)
+                is Resource.Error -> handleBlogsFetchError(it)
             }
-        })
+        }
 
-        viewModel.users.observe(this, {
+        viewModel.users.observe(this) {
             when (it) {
-                is Success -> showUserData(it.data)
-                is Error -> handleUserDataFetchError(it)
+                is Resource.Success -> showUserData(it.data)
+                is Resource.Error -> handleUserDataFetchError(it)
             }
-        })
+        }
     }
 
     private fun showUserData(data: List<String>) {
@@ -71,17 +67,17 @@ class BlogsActivity : AppCompatActivity(), BlogClickHandler, UserClickHandler {
         viewModel.fetchUsers()
     }
 
-    private fun handleBlogsFetchError(resource: Error<List<Blog>>) {
+    private fun handleBlogsFetchError(resource: Resource.Error<List<Blog>>) {
         resource.data?.let { showBlogsData(it) }
         Log.d("Elijah", "Error loading blogs: ${resource.exception.message}")
-        Toast.makeText(this, "Sorry, there was an error loading the blogs", Toast.LENGTH_LONG)
+        Toast.makeText(context, "Sorry, there was an error loading the blogs", Toast.LENGTH_LONG)
             .show()
     }
 
-    private fun handleUserDataFetchError(resource: Error<List<String>>) {
+    private fun handleUserDataFetchError(resource: Resource.Error<List<String>>) {
         resource.data?.let { showUserData(it) }
         Log.d("Elijah", "Error loading users: ${resource.exception.message}")
-        Toast.makeText(this, "Sorry, there was an error loading the users", Toast.LENGTH_LONG)
+        Toast.makeText(context, "Sorry, there was an error loading the users", Toast.LENGTH_LONG)
             .show()
     }
 
