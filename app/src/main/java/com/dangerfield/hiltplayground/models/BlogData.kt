@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 /*
 Domain model: central to the project, never changes. Used to show thingys
  */
-data class Blog(
+data class BlogData(
     val body: String,
     val category: String,
     val image: String,

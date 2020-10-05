@@ -1,4 +1,4 @@
-package com.dangerfield.hiltplayground.data
+package com.dangerfield.hiltplayground.data.blog
 
 import retrofit2.http.GET
 
