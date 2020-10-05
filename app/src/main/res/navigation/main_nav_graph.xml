@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/blogFragment"
-        android:name="com.dangerfield.hiltplayground.ui.BlogsFragment"
+        android:name="com.dangerfield.hiltplayground.ui.home.HomeFragment"
         android:label="fragment_blog"
-        tools:layout="@layout/fragment_blogs" />
+        tools:layout="@layout/fragment_home" />
 </navigation>

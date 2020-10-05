@@ -1,15 +1,17 @@
-package com.dangerfield.hiltplayground.data
+package com.dangerfield.hiltplayground.data.blog
 
-import com.dangerfield.hiltplayground.models.Blog
+import com.dangerfield.hiltplayground.data.EntityMapper
+import com.dangerfield.hiltplayground.models.BlogData
 import javax.inject.Inject
 
 /*
  Clean Architecture: There's data you get from the network, and then theres data
  you use to create a user experience. They dont always look the same.
  */
-class NetworkMapper @Inject constructor() : EntityMapper<BlogNetworkEntity, Blog> {
-    override fun mapFromEntity(entity: BlogNetworkEntity): Blog {
-        return Blog(
+class BlogNetworkMapper @Inject constructor() :
+    EntityMapper<BlogNetworkEntity, BlogData> {
+    override fun mapFromEntity(entity: BlogNetworkEntity): BlogData {
+        return BlogData(
             body = entity.body,
             title = entity.title,
             image = entity.image,
@@ -18,7 +20,7 @@ class NetworkMapper @Inject constructor() : EntityMapper<BlogNetworkEntity, Blog
         )
     }
 
-    override fun mapToEntity(domainModel: Blog): BlogNetworkEntity {
+    override fun mapToEntity(domainModel: BlogData): BlogNetworkEntity {
         return BlogNetworkEntity(
             body = domainModel.body,
             title = domainModel.title,
@@ -28,7 +30,7 @@ class NetworkMapper @Inject constructor() : EntityMapper<BlogNetworkEntity, Blog
         )
     }
 
-    fun mapFromEntityList(list: List<BlogNetworkEntity>) : List<Blog> {
+    fun mapFromEntityList(list: List<BlogNetworkEntity>) : List<BlogData> {
         return list.map { mapFromEntity(it) }
     }
 }

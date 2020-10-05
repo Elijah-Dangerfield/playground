@@ -1,4 +1,4 @@
-package com.dangerfield.hiltplayground.data
+package com.dangerfield.hiltplayground.data.blog
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
