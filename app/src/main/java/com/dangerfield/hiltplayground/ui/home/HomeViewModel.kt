@@ -4,7 +4,6 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.dangerfield.hiltplayground.data.blog.BlogRepository
 import com.dangerfield.hiltplayground.data.user.UsersRepository
-import com.dangerfield.hiltplayground.models.UserData
 import com.dangerfield.hiltplayground.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn
@@ -36,13 +35,13 @@ class HomeViewModel @ViewModelInject constructor(
                 .onEach {
                     when(it) {
                         is Resource.Success -> {
-                            _data.postValue(currentData.copy(users = it.data))
+                            _data.postValue(currentData.copy(userData = it.data))
                         }
                         is Resource.Loading -> {
-                            it.data?.let {data -> _data.postValue(currentData.copy(users = data)) }
+                            it.data?.let {data -> _data.postValue(currentData.copy(userData = data)) }
                         }
                         is Resource.Error -> {
-                            it.data?.let {data -> _data.postValue(currentData.copy(users = data)) }
+                            it.data?.let {data -> _data.postValue(currentData.copy(userData = data)) }
                             _error.postValue(HomeDataError.BlogsError(it.exception.localizedMessage ?: "Unknown error"))
                         }
                     }

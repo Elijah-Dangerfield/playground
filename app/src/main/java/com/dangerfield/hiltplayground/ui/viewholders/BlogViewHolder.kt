@@ -9,23 +9,22 @@ import com.dangerfield.hiltplayground.models.BlogData
 import com.dangerfield.hiltplayground.util.inflate
 import kotlinx.android.synthetic.main.item_blog.view.*
 
-class BlogViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+class BlogViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-    fun bind(blogData: BlogData) {
+    fun bind(data: BlogData) {
         itemView.apply {
-            blogTitle.text = blogData.title
-            blogPreview.text = blogData.body
-            blogCategory.text = "category: ${blogData.category}"
+            blogTitle.text = data.title
+            blogPreview.text = data.body
+            blogCategory.text = "category: ${data.category}"
 
             Glide.with(blogImage.context)
-                .load(blogData.image)
+                .load(data.image)
                 .centerCrop()
                 .into(blogImage)
         }
     }
 
     companion object {
-        @JvmStatic
         fun create(view: ViewGroup): BlogViewHolder {
             return BlogViewHolder(
                 view.inflate(R.layout.item_blog)

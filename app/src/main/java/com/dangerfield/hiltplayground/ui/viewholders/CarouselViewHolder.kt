@@ -39,25 +39,12 @@ class CarouselViewHolder(parent: ViewGroup,
     private fun initCarousel(recyclerView: CarouselView,
                              typeAdapters: List<TypeAdapter<*, *>>): (Items) -> Unit {
 
-       // recyclerView.addCarouselDecoration(recyclerView.params.gutter)
-
-       // val itemWidth = carouselView.itemWidth
-
         val adapter = MultiTypeAdapter(typeAdapters)
 
         recyclerView.adapter = adapter
 
         return { items -> adapter.setData(items) }
     }
-
-//    private fun <D, V : RecyclerView.ViewHolder> wrapToSetTileWidth(original: TypeAdapter<D, V>,
-//                                                                    itemWidth: Int): TypeAdapter<D, V> {
-//        return HeterogeneousBinderWrappers.afterBinding(original) { viewHolder ->
-//            viewHolder.itemView.layoutParams = RecyclerView.LayoutParams(itemWidth,
-//                RecyclerView.LayoutParams.WRAP_CONTENT)
-//        }
-//    }
-
 
     override fun onLoadState(savedState: Bundle) {
         carouselView.post { carouselView.scrollBy(savedState.getInt(POSITION_STATE_KEY), 0) }
