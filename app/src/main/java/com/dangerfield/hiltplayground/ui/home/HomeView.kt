@@ -8,12 +8,8 @@ import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.hiltplayground.R
+import com.dangerfield.hiltplayground.models.CarouselData
 import com.dangerfield.hiltplayground.models.HeaderData
-import com.dangerfield.hiltplayground.ui.typeadapters.BlogTypeAdapter
-import com.dangerfield.hiltplayground.ui.typeadapters.HeaderTypeAdapter
-import com.dangerfield.hiltplayground.ui.typeadapters.UserTypeAdapter
-import com.dangerfield.hiltplayground.ui.typeadapters.toCarousel
-import com.dangerfield.hiltplayground.util.mtadapter.TypeAdapter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 @ExperimentalCoroutinesApi
@@ -26,6 +22,7 @@ class HomeView(
     private val blogsAdapter = BlogAdapter()
     private val blogsHeaderAdapter = HeaderAdapter()
     private val userHeaderAdapter = HeaderAdapter()
+    private val usersAdapter = CarouselAdapter(UsersAdapter() as IhrAdapter<out RecyclerView.ViewHolder, Any>)
 
     init {
         setupObservers()
@@ -35,7 +32,7 @@ class HomeView(
 
     private fun setupView() {
         blogsRecyclerView.layoutManager = LinearLayoutManager(view.context)
-        blogsRecyclerView.adapter = ConcatAdapter(userHeaderAdapter, blogsHeaderAdapter, blogsAdapter)
+        blogsRecyclerView.adapter = ConcatAdapter(userHeaderAdapter, usersAdapter, blogsHeaderAdapter, blogsAdapter)
     }
 
     private fun setupObservers() {
@@ -43,6 +40,7 @@ class HomeView(
             blogsAdapter.setItems(it.blogData)
             blogsHeaderAdapter.setItems(listOf(HeaderData("Blogs")))
             userHeaderAdapter.setItems(listOf(HeaderData("Users")))
+            usersAdapter.setItems(listOf(CarouselData(it.userData)))
         })
 
         viewModel.error.observe(lifecycleOwner, Observer {

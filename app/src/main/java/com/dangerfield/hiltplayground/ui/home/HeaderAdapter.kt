@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.hiltplayground.models.HeaderData
 import com.dangerfield.hiltplayground.ui.viewholders.HeaderViewHolder
 
-class HeaderAdapter : RecyclerView.Adapter<HeaderViewHolder>() {
+class HeaderAdapter : IhrAdapter<HeaderViewHolder, HeaderData>() {
 
     private var items = listOf<HeaderData>()
 
@@ -22,9 +22,12 @@ class HeaderAdapter : RecyclerView.Adapter<HeaderViewHolder>() {
         holder.bind(items[position])
     }
 
-    fun setItems(data: List<HeaderData>) {
+    override fun setItems(data: List<HeaderData>) {
         items = data
         notifyDataSetChanged()
     }
 
+    override fun isMyData(data: List<Any>): Boolean {
+        return data.firstOrNull() is HeaderData
+    }
 }

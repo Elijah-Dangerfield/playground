@@ -1,18 +1,16 @@
 package com.dangerfield.hiltplayground.ui.home
 
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.hiltplayground.models.UserData
 import com.dangerfield.hiltplayground.ui.viewholders.UserViewHolder
 
-class UsersAdapter : RecyclerView.Adapter<UserViewHolder>() {
+class UsersAdapter : IhrAdapter<UserViewHolder, UserData>() {
 
     private var items = listOf<UserData>()
 
-    fun setItems(newItems: List<UserData>) {
-        items = newItems
+    override fun setItems(data: List<UserData>) {
+        items = data
         notifyDataSetChanged()
-        //TODO use a diff
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -25,5 +23,9 @@ class UsersAdapter : RecyclerView.Adapter<UserViewHolder>() {
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind(items[position])
+    }
+
+    override fun isMyData(data: List<Any>): Boolean {
+        return data.firstOrNull() is UserData
     }
 }
