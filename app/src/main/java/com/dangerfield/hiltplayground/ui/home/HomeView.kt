@@ -25,6 +25,7 @@ class HomeView(
     private val blogsRecyclerView : RecyclerView = view.findViewById(R.id.blogsRecyclerView)
     private val blogsAdapter = BlogAdapter()
     private val blogsHeaderAdapter = HeaderAdapter()
+    private val userHeaderAdapter = HeaderAdapter()
 
     init {
         setupObservers()
@@ -34,13 +35,14 @@ class HomeView(
 
     private fun setupView() {
         blogsRecyclerView.layoutManager = LinearLayoutManager(view.context)
-        blogsRecyclerView.adapter = ConcatAdapter(blogsHeaderAdapter, blogsAdapter)
+        blogsRecyclerView.adapter = ConcatAdapter(userHeaderAdapter, blogsHeaderAdapter, blogsAdapter)
     }
 
     private fun setupObservers() {
         viewModel.data.observe(lifecycleOwner, Observer {
             blogsAdapter.setItems(it.blogData)
             blogsHeaderAdapter.setItems(listOf(HeaderData("Blogs")))
+            userHeaderAdapter.setItems(listOf(HeaderData("Users")))
         })
 
         viewModel.error.observe(lifecycleOwner, Observer {
