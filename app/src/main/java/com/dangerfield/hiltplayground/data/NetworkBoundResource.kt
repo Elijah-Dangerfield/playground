@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.*
 // ResultType: Type for the Resource data.
 // RequestType: Type for the API response.
 abstract class NetworkBoundResource<ResultType, RequestType> {
-    val logt = "Elijah"
+    val logt = "NBR"
     fun log(message: String) = Log.d(logt, message)
 
     @ExperimentalCoroutinesApi

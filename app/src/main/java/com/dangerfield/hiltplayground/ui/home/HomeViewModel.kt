@@ -1,5 +1,6 @@
 package com.dangerfield.hiltplayground.ui.home
 
+import android.util.Log
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.dangerfield.hiltplayground.data.blog.BlogRepository
@@ -16,8 +17,11 @@ class HomeViewModel @ViewModelInject constructor(
     private val usersRepository: UsersRepository
 ) : ViewModel() {
 
+    val logt = "Elijah"
+    fun log(message: String) = Log.d(logt, message)
+
     private val currentData: HomeData
-    get() = _data.value ?: HomeData()
+        get() = _data.value ?: HomeData()
 
     private val _data = MutableLiveData<HomeData>()
 
@@ -34,16 +38,30 @@ class HomeViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             usersRepository.getUsers()
                 .onEach {
-                    when(it) {
+                    when (it) {
                         is Resource.Success -> {
+                            log("Posting users success in view model")
+                            log("Users[${it.data.size}] Blogs[${currentData.blogData.size}] ")
                             _data.postValue(currentData.copy(users = it.data))
                         }
                         is Resource.Loading -> {
-                            it.data?.let {data -> _data.postValue(currentData.copy(users = data)) }
+                            it.data?.let { data ->
+                                log("Posting users loading in view model")
+                                log("Users[${data.size}] Blogs[${currentData.blogData.size}] ")
+                                _data.postValue(currentData.copy(users = data))
+                            }
                         }
                         is Resource.Error -> {
-                            it.data?.let {data -> _data.postValue(currentData.copy(users = data)) }
-                            _error.postValue(HomeDataError.BlogsError(it.exception.localizedMessage ?: "Unknown error"))
+                            it.data?.let { data ->
+                                log("Posting users error in view model")
+                                log("Users[${data.size}] Blogs[${currentData.blogData.size}] ")
+                                _data.postValue(currentData.copy(users = data))
+                            }
+                            _error.postValue(
+                                HomeDataError.BlogsError(
+                                    it.exception.localizedMessage ?: "Unknown error"
+                                )
+                            )
                         }
                     }
                 }.launchIn(viewModelScope)
@@ -55,18 +73,32 @@ class HomeViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             blogRepository.getBlogs()
                 .onEach {
-                   when(it) {
-                       is Resource.Success -> {
-                           _data.postValue(currentData.copy(blogData = it.data))
-                       }
-                       is Resource.Loading -> {
-                           it.data?.let {data -> _data.postValue(currentData.copy(blogData = data)) }
-                       }
-                       is Resource.Error -> {
-                           it.data?.let {data -> _data.postValue(currentData.copy(blogData = data)) }
-                           _error.postValue(HomeDataError.BlogsError(it.exception.localizedMessage ?: "Unknown error"))
-                       }
-                   }
+                    when (it) {
+                        is Resource.Success -> {
+                            log("Posting blogs success in view model")
+                            log("Users[${currentData.users.size}] Blogs[${it.data.size}] ")
+                            _data.postValue(currentData.copy(blogData = it.data))
+                        }
+                        is Resource.Loading -> {
+                            it.data?.let { data ->
+                                log("Posting blogs loading in view model")
+                                log("Users[${currentData.users.size}] Blogs[${data.size}] ")
+                                _data.postValue(currentData.copy(blogData = data))
+                            }
+                        }
+                        is Resource.Error -> {
+                            it.data?.let { data ->
+                                log("Posting blogs error in view model")
+                                log("Users[${currentData.users.size}] Blogs[${data.size}] ")
+                                _data.postValue(currentData.copy(blogData = data))
+                            }
+                            _error.postValue(
+                                HomeDataError.BlogsError(
+                                    it.exception.localizedMessage ?: "Unknown error"
+                                )
+                            )
+                        }
+                    }
                 }.launchIn(viewModelScope)
         }
     }
