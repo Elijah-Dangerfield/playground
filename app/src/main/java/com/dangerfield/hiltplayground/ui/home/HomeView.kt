@@ -33,7 +33,7 @@ class HomeView(
     private fun setupObservers() {
         viewModel.data.observe(lifecycleOwner, Observer {
             log("\nGot new data in view. " +
-                    "\nUsers size: ${it.users.size} \n" +
+                    "\nUsers size: ${it.userData.size} \n" +
                     "Blogs size: ${it.blogData.size}")
             adapter.update(it.toSections())
         })

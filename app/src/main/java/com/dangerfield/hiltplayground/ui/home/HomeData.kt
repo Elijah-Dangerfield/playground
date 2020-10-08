@@ -13,7 +13,7 @@ import com.xwray.groupie.kotlinandroidextensions.GroupieViewHolder
 
 data class HomeData(
     val blogData: List<BlogData> = listOf(),
-    val users: List<UserData> = listOf()
+    val userData: List<UserData> = listOf()
 ) {
 
     fun toSections() = listOf(createUsers(), createBlogs())
@@ -21,7 +21,7 @@ data class HomeData(
     private fun createUsers(): Section {
         val section = Section(HeaderItem(HeaderData("Users")))
         val userAdapter = GroupAdapter<GroupieViewHolder>()
-        userAdapter.update(users.map { UserItem(it) })
+        userAdapter.update(userData.map { UserItem(it) })
         section.add(CarouselItem(userAdapter))
         return section
     }
