@@ -16,7 +16,7 @@ class HomeViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     private val currentData: HomeData
-    get() = _data.value ?: HomeData()
+        get() = _data.value ?: HomeData()
 
     private val _data = MutableLiveData<HomeData>()
 
@@ -33,16 +33,23 @@ class HomeViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             usersRepository.getUsers()
                 .onEach {
-                    when(it) {
-                        is Resource.Success -> {
-                            _data.postValue(currentData.copy(userData = it.data))
-                        }
-                        is Resource.Loading -> {
-                            it.data?.let {data -> _data.postValue(currentData.copy(userData = data)) }
-                        }
+                    when (it) {
+                        is Resource.Success ->
+                            _data.value = currentData.copy(userData = it.data)
+
+                        is Resource.Loading ->
+                            it.data?.let { data ->
+                                _data.value = (currentData.copy(userData = data))
+                            }
+
                         is Resource.Error -> {
-                            it.data?.let {data -> _data.postValue(currentData.copy(userData = data)) }
-                            _error.postValue(HomeDataError.BlogsError(it.exception.localizedMessage ?: "Unknown error"))
+                            it.data?.let { data ->
+                                _data.value = (currentData.copy(userData = data))
+                            }
+                            _error.value =
+                                HomeDataError.BlogsError(
+                                    it.exception.localizedMessage ?: "Unknown error"
+                                )
                         }
                     }
                 }.launchIn(viewModelScope)
@@ -54,18 +61,25 @@ class HomeViewModel @ViewModelInject constructor(
         viewModelScope.launch {
             blogRepository.getBlogs()
                 .onEach {
-                   when(it) {
-                       is Resource.Success -> {
-                           _data.postValue(currentData.copy(blogData = it.data))
-                       }
-                       is Resource.Loading -> {
-                           it.data?.let {data -> _data.postValue(currentData.copy(blogData = data)) }
-                       }
-                       is Resource.Error -> {
-                           it.data?.let {data -> _data.postValue(currentData.copy(blogData = data)) }
-                           _error.postValue(HomeDataError.BlogsError(it.exception.localizedMessage ?: "Unknown error"))
-                       }
-                   }
+                    when (it) {
+                        is Resource.Success ->
+                            _data.value = currentData.copy(blogData = it.data)
+
+                        is Resource.Loading ->
+                            it.data?.let { data ->
+                                _data.value = (currentData.copy(blogData = data))
+                            }
+
+                        is Resource.Error -> {
+                            it.data?.let { data ->
+                                _data.value = (currentData.copy(blogData = data))
+                            }
+                            _error.value =
+                                HomeDataError.BlogsError(
+                                    it.exception.localizedMessage ?: "Unknown error"
+                                )
+                        }
+                    }
                 }.launchIn(viewModelScope)
         }
     }
