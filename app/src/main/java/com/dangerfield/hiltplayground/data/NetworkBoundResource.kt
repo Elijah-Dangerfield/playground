@@ -11,11 +11,11 @@ import kotlinx.coroutines.flow.*
 // ResultType: Type for the Resource data.
 // RequestType: Type for the API response.
 abstract class NetworkBoundResource<ResultType, RequestType> {
-    val logt = "Elijah"
+    val logt = "NBR"
     fun log(message: String) = Log.d(logt, message)
 
     @ExperimentalCoroutinesApi
-    fun asFlow() = flow {
+    fun asFlow() : Flow<Resource<ResultType>> = flow {
         log("Starting network bound resource, enter loading with null")
         emit(Resource.Loading(null))
 
@@ -23,7 +23,6 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
         if (shouldFetch(dbValue)) {
             log("we needed to fetch, showing loading with db value")
             emit(Resource.Loading(dbValue))
-            delay(3000)
             when (val apiResponse = fetchFromNetwork()) {
                 is ApiResponse.Success -> {
                     log("got api success response, saving and posting")

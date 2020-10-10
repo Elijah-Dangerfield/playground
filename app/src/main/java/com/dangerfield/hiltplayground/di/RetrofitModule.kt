@@ -1,6 +1,7 @@
 package com.dangerfield.hiltplayground.di
 
-import com.dangerfield.hiltplayground.data.BlogRetrofit
+import com.dangerfield.hiltplayground.data.blog.BlogRetrofit
+import com.dangerfield.hiltplayground.data.user.UserRetrofit
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -22,17 +23,18 @@ object RetrofitModule {
             .create()
     }
 
+
     @Singleton
     @Provides
-    fun provideRetrofit(gson: Gson) : Retrofit.Builder {
+    fun providesBlogService(gson: Gson): BlogRetrofit {
         return Retrofit.Builder().baseUrl("https://open-api.xyz/placeholder/")
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(GsonConverterFactory.create(gson)).build().create(BlogRetrofit::class.java)
     }
 
     @Singleton
     @Provides
-    fun providesBlogService(retrofitBuilder: Retrofit.Builder): BlogRetrofit {
-        return retrofitBuilder.build().create(BlogRetrofit::class.java)
+    fun providesUserService(gson: Gson): UserRetrofit {
+        return Retrofit.Builder().baseUrl("https://jsonplaceholder.typicode.com/")
+            .addConverterFactory(GsonConverterFactory.create(gson)).build().create(UserRetrofit::class.java)
     }
-
 }

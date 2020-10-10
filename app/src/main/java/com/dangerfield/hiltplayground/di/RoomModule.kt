@@ -2,8 +2,8 @@ package com.dangerfield.hiltplayground.di
 
 import android.content.Context
 import androidx.room.Room
-import com.dangerfield.hiltplayground.db.BlogDao
-import com.dangerfield.hiltplayground.db.BlogDatabase
+import com.dangerfield.hiltplayground.db.Dao
+import com.dangerfield.hiltplayground.db.DataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,15 +17,15 @@ object RoomModule {
 
     @Singleton
     @Provides
-    fun providesBlogDatabase(@ApplicationContext context: Context) : BlogDatabase {
-        return Room.databaseBuilder(context, BlogDatabase::class.java, BlogDatabase.DATABASE_NAME)
+    fun provideDatabase(@ApplicationContext context: Context) : DataBase {
+        return Room.databaseBuilder(context, DataBase::class.java, DataBase.DATABASE_NAME)
             .fallbackToDestructiveMigration() // if no migration found, clear database, restart
             .build()
     }
 
     @Singleton
     @Provides
-    fun providesBlogDatabaseDao(blogDatabase: BlogDatabase): BlogDao {
-        return blogDatabase.blogDao()
+    fun provideDatabaseDao(dataBase: DataBase): Dao {
+        return dataBase.dao()
     }
 }
